@@ -48,6 +48,9 @@ public class Home extends Activity {
         textView = new TextView(this);
         recordButton = new Button(this);
         recordButton.setText("RECORD THAT SHIT!");
+        imageView = new ImageView(this);
+        
+        
         recordButton.setOnClickListener(new View.OnClickListener() {
             private boolean startBool = true;
             @Override
@@ -74,6 +77,7 @@ public class Home extends Activity {
         });
         layout.addView(textView);
         layout.addView(recordButton);
+        layout.addView(imageView);
 //        layout.addView(sendshitButton);
         setContentView(layout);
 //        enableConnection();
@@ -151,7 +155,8 @@ public class Home extends Activity {
         	outToFile.write(buffer);
         }
 
-
+        Bitmap image = new BitmapFactory.decodeFile(pic);
+        imageView.setImageBitmap(image);
 
     }
 
