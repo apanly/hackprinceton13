@@ -13,6 +13,8 @@ RE:aubio/examples/[a-z]*
 RE:aubio/tests/src/test-[a-z-_]*$
 RE:aubio/tests/cpp/test-[a-z-_]*$
 
+build
+
 # only sgml manpages count
 aubio/doc/*.1
 
