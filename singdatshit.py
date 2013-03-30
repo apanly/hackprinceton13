@@ -13,7 +13,7 @@ class GenericConverter(object):
     """
     raise Exception("_parse unimplemented")
 
-  def parse(self, filename, samplerate=60):
+  def parse(self, filename, samplerate=44100):
     """
     converts the filename to a representation of the music
     stored in filename
@@ -25,6 +25,7 @@ class GenericConverter(object):
 
 class SimpleConverter(GenericConverter):
 
+  duration = { 1 : 
   notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
   _A4_ = 440 # Hz
   _A4Coord_ = 57
@@ -60,10 +61,17 @@ class SimpleConverter(GenericConverter):
     super(MyConvertDatShit, self).__init__(win_s, hop_s)
 
   def _parse_(self, filename, samplerate):
+    tempo_win_s = self.win_s / 2
+    tempo_hop_s = self.hop_s / 4
+
     s = source(filename, samplerate, self.hop_s)
     
-    pitch_o = pitch("default", win_s, hop_s, samplerate)
+    pitch_o = pitch("default", self.win_s, self.hop_s, samplerate)
     pitch_o.set_unit("midi")
+
+    s2 = source(filename, samplerate, tempo_hop_s)
+    tempo_o = tempo("default", tempo_win_s, tempo_hop_s, samplerate)
+    delay = 4. * tempo_hop_s
 
     notes = []
 
@@ -71,7 +79,12 @@ class SimpleConverter(GenericConverter):
     total_frames = 0
 
     fixed_interval = total_frames / float(samplerate)
+    samples, read = s()
+    pitch = pitch_o(samples)[0]
+    duration = fixed_interval
+
     while True:
+      samples, read = 
       samples, read = s()
       pitch = pitch_o(samples)[0]
       note, octave = MusicalNote.hertz_to_note(pitch)
