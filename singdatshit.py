@@ -21,7 +21,7 @@ class GenericConverter(object):
     @param filename the filename of the .wav file
     @param samplerate the sampling rate, in seconds
     """
-    self._parse(filename, samplerate)
+    return self._parse_(filename, samplerate)
 
 class SimpleConverter(GenericConverter):
 
@@ -52,7 +52,7 @@ class SimpleConverter(GenericConverter):
       """
       steps_in_octave = SimpleConverter.steps_in_octave
       hertz = float(hertz)
-      steps_away = steps_in_octave * log(hertz/SimpleConverter._A4_)
+      steps_away = int(round(steps_in_octave * log(hertz/SimpleConverter._A4_)))
       new_position = SimpleConverter._A4Coord_ + steps_away
       (index, octave) = new_position % steps_in_octave, new_position / steps_in_octave
       return SimpleConverter.notes[index], octave
@@ -86,7 +86,7 @@ class SimpleConverter(GenericConverter):
       if is_beat:
         this_beat = int(total_frames - delay + is_beat[0] * hop_s)
         average = sum(previous_samples)/len(previous_samples)
-        note, octave = MusicalNote.hertz_to_note(average)
+        note, octave = SimpleConverter.MusicalNote.hertz_to_note(average)
         notes += [(note, octave, total_frames/samplerate)]
         previous_samples = []
 
@@ -95,5 +95,8 @@ class SimpleConverter(GenericConverter):
         previous_samples += [pitch]
 
       total_frames += read
+
+    notes = [SimpleConverter.MusicalNote(note[0] + str(note[1]), note[2]) \
+             for note in notes]
 
     return notes
