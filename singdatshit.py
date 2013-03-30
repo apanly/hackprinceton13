@@ -25,7 +25,7 @@ class GenericConverter(object):
 
 class SimpleConverter(GenericConverter):
 
-  duration = { 1 : 
+  #duration = { 1 : 
   notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
   _A4_ = 440 # Hz
   _A4Coord_ = 57
