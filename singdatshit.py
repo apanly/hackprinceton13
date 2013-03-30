@@ -73,17 +73,13 @@ class SimpleConverter(GenericConverter):
 
   def _parse_(self, filename, samplerate):
     from aubio import source, pitch, tempo
-    # MAGIC NUMBERS ALERT
-    tempo_win_s = self.win_s/2
-    tempo_hop_s = self.hop_s/4
     s = source(filename, samplerate, self.hop_s)
 
     pitch_o = pitch("default", self.win_s, self.hop_s, samplerate)
     pitch_o.set_unit("midi")
 
-    s2 = source(filename, samplerate, tempo_hop_s)
-    tempo_o = tempo("default", tempo_win_s, tempo_hop_s, samplerate)
-    delay = 4. * tempo_hop_s
+    tempo_o = tempo("default", self.win_s, self.hop_s, samplerate)
+    delay = 4. * self.hop_s
 
     notes = []
 
@@ -98,34 +94,29 @@ class SimpleConverter(GenericConverter):
       samples, read = s()
       pitch = pitch_o(samples)[0]
 
-      for iter in xrange(self.hop_s/tempo_hop_s):
-        samples2, read2 = s2()
+      is_beat = tempo_o(samples)
 
-        if read < tempo_hop_s:
-          break
-
-        is_beat = tempo_o(samples2)
-
-        # BUG: doesn't work if sample starts on beat FIRST
-        if is_beat:
-          this_beat = int(total_frames - delay + is_beat[0] * tempo_hop_s)
-          average = sum(previous_samples)/len(previous_samples)
-          note, octave = SimpleConverter.MusicalNote.coord_to_note(average)
-          notes += [(note, octave, total_frames/samplerate)]
-          previous_samples = []
-          break
+      # BUG: doesn't work if sample starts on beat FIRST
+      if is_beat:
+        this_beat = int(total_frames - delay + is_beat[0] * self.hop_s)
+        average = sum(previous_samples)/len(previous_samples)
+        note, octave = SimpleConverter.MusicalNote.coord_to_note(average)
+        notes += [(note, octave, total_frames/samplerate)]
+        previous_samples = []
 
       # don't want to add otherwise because higher chance at transition zone
-      # also don't want to add noises
-      if abs(pitch) > 10:
+#       elif 0 != pitch:
+      elif abs(pitch) > 0.1:
         previous_samples += [pitch]
 
       total_frames += read
 
-    for i in xrange(len(notes) - 1, 0, -1):
-      (pnote, poctave, pstart) = notes[i - 1]
+    for i in xrange(0, len(notes) - 1):
       (note, octave, start) = notes[i]
-      notes[i] = (note, octave, start - pstart)
+      (snote, soctave, sstart) = notes[i + 1]
+      notes[i] = (note, octave, sstart - start)
+    (note, octave, start) = notes[-1]
+    notes[-1] = (note, octave, total_frames/samplerate - start)
 
     notes = [SimpleConverter.MusicalNote(note[0] + str(note[1]), note[2]) \
              for note in notes]
