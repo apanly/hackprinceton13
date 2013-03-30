@@ -1,5 +1,4 @@
 import sys
-from math import log
 from aubio import source, pitch
 
 class GenericConverter(object):
@@ -18,7 +17,7 @@ class GenericConverter(object):
     """
     converts the filename to a representation of the music
     stored in filename
-
+    
     @param filename the filename of the .wav file
     @param samplerate the sampling rate, in seconds
     """
@@ -26,7 +25,7 @@ class GenericConverter(object):
 
 class SimpleConverter(GenericConverter):
 
-  #duration = { 1 :
+  #duration = { 1 : 
   notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
   _A4_ = 440 # Hz
   _A4Coord_ = 57
@@ -55,16 +54,18 @@ class SimpleConverter(GenericConverter):
       hertz = float(hertz)
       steps_away = int(round(steps_in_octave * log(hertz/SimpleConverter._A4_)))
       new_position = SimpleConverter._A4Coord_ + steps_away
-      (index, octave) = (int(round(new_position % steps_in_octave)),
-                         int(new_position / steps_in_octave))
+      (index, octave) = new_position % steps_in_octave, new_position / steps_in_octave
       return SimpleConverter.notes[index], octave
 
+    def __repr__(self):
+      return "MusicalNote(%r, %r)" % (self.note, self.length)
+  
   def __init__(self, win_s, hop_s):
     super(MyConvertDatShit, self).__init__(win_s, hop_s)
 
   def _parse_(self, filename, samplerate):
     s = source(filename, samplerate, self.hop_s)
-
+    
     pitch_o = pitch("default", self.win_s, self.hop_s, samplerate)
     pitch_o.set_unit("midi")
 
@@ -82,9 +83,21 @@ class SimpleConverter(GenericConverter):
     while read < hop_s:
       samples, read = s()
       pitch = pitch_o(samples)[0]
-      note, octave = MusicalNote.hertz_to_note(pitch)
+      is_beat = tempo_o(samples)
 
-      notes += [SimpleConverter.MusicalNote(note + str(octave), fixed_interval)]
+      # BUG: doesn't work if sample starts on beat FIRST
+      if is_beat:
+        this_beat = int(total_frames - delay + is_beat[0] * hop_s)
+        average = sum(previous_samples)/len(previous_samples)
+        note, octave = SimpleConverter.MusicalNote.hertz_to_note(average)
+        notes += [(note, octave, total_frames/samplerate)]
+        previous_samples = []
+
+      # don't want to add otherwise because higher chance at transition zone
+      else:
+        previous_samples += [pitch]
+
+      total_frames += read
 
     notes = [SimpleConverter.MusicalNote(note[0] + str(note[1]), note[2]) \
              for note in notes]

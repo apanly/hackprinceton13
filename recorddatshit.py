@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """PyAudio example: Record a few seconds of audio and save to a WAVE file."""
 
 import pyaudio

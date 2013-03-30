@@ -1,5 +1,4 @@
-#! /usr/bin/env python
-
+#!/usr/bin/python
 import sys
 from aubio import source, pitch
 
