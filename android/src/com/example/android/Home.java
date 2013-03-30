@@ -8,7 +8,6 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ProgressBar;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -34,8 +32,6 @@ public class Home extends Activity {
     private DataOutputStream outToServer;
     private Socket client;
     private BufferedReader inFromServer;
-    private Handler handler;
-    private ProgressBar volume;
 
     private TextView textView;
 
@@ -47,7 +43,6 @@ public class Home extends Activity {
         LinearLayout layout = new LinearLayout(this);
         textView = new TextView(this);
         recordButton = new Button(this);
-        volume = new ProgressBar(this);
         recordButton.setText("RECORD THAT SHIT!");
         recordButton.setOnClickListener(new View.OnClickListener() {
             private boolean startBool = true;
@@ -76,7 +71,6 @@ public class Home extends Activity {
         layout.addView(textView);
         layout.addView(recordButton);
         layout.addView(sendshitButton);
-        layout.addView(volume);
         setContentView(layout);
 //        enableConnection();
     }
@@ -88,7 +82,6 @@ public class Home extends Activity {
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setOutputFile(appDirectoryPath + fileName + ".wav");
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        
 
         try {
             recorder.prepare();
@@ -98,21 +91,6 @@ public class Home extends Activity {
             Log.e(LOG_TAG, "prepare() failed");
             Toast.makeText(this, "fuck, we are not prepared", Toast.LENGTH_LONG).show();
         }
-        volume.setMax(recorder.getAudioSourceMax());
-        
-        handler = new Handler();
-        handler.post(new Runnable {
-        	
-        	public void run() {
-        		//display shit
-        		
-        		
-        		
-        		volume.setProgress(recorder.getMaxAmplitude());
-        		
-        		handler.postDelayed(this, 75);
-        	}
-        });
     }
 
     private void stopRecording() {
@@ -120,7 +98,6 @@ public class Home extends Activity {
         recorder.stop();
         recorder.release();
         recorder = null;
-        handler = null;
 //        new AddToDropboxTask().execute(fileName.concat(".mp4"));
     }
 
@@ -274,6 +251,4 @@ public class Home extends Activity {
             return null;
         }
     }
-    
-    
 }
