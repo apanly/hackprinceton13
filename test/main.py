@@ -42,7 +42,7 @@ def test_parser_piano_wav():
 
 def test_to_pdf():
   converter = SimpleConverter(1024, 1024)
-  filename = "mark-bringhimhome"
+  filename = "Canon-violin"
   parser_output = converter.parse("%s/%s.wav" % (input_dir, filename))
   text = SimpleConverter.to_pdf(parser_output)
   f = open("in/%s.lytex" % filename, "w")

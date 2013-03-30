@@ -8,7 +8,6 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
@@ -19,8 +18,6 @@ import android.widget.Toast;
 import android.widget.ProgressBar;
 import android.io.FileOutputStream;
 import android.widget.ImageView
-
-
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -39,9 +36,7 @@ public class Home extends Activity {
     private BufferedReader inFromServer;
     private Handler handler;
     private ProgressBar volume;
-    private ImageView imageView; 
-    
-
+    private ImageView imageView;
     private TextView textView;
 
     @Override
@@ -52,7 +47,6 @@ public class Home extends Activity {
         LinearLayout layout = new LinearLayout(this);
         textView = new TextView(this);
         recordButton = new Button(this);
-        volume = new ProgressBar(this);
         recordButton.setText("RECORD THAT SHIT!");
         recordButton.setOnClickListener(new View.OnClickListener() {
             private boolean startBool = true;
@@ -75,13 +69,12 @@ public class Home extends Activity {
             @Override
             public void onClick(View view) {
                 new SendMessageAsyncTask().execute();
-//                Log.e(LOG_TAG, "fuckfuckfuck");
+                Log.e(LOG_TAG, "fuckfuckfuck");
             }
         });
         layout.addView(textView);
         layout.addView(recordButton);
-        layout.addView(sendshitButton);
-        layout.addView(volume);
+//        layout.addView(sendshitButton);
         setContentView(layout);
 //        enableConnection();
     }
@@ -93,7 +86,6 @@ public class Home extends Activity {
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setOutputFile(appDirectoryPath + fileName + ".wav");
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        
 
         try {
             recorder.prepare();
@@ -103,21 +95,6 @@ public class Home extends Activity {
             Log.e(LOG_TAG, "prepare() failed");
             Toast.makeText(this, "fuck, we are not prepared", Toast.LENGTH_LONG).show();
         }
-        volume.setMax(recorder.getAudioSourceMax());
-        
-        handler = new Handler();
-        handler.post(new Runnable {
-        	
-        	public void run() {
-        		//display shit
-        		
-        		
-        		
-        		volume.setProgress(recorder.getMaxAmplitude());
-        		
-        		handler.postDelayed(this, 75);
-        	}
-        });
     }
 
     private void stopRecording() {
@@ -125,7 +102,7 @@ public class Home extends Activity {
         recorder.stop();
         recorder.release();
         recorder = null;
-        handler = null;
+        new SendMessageAsyncTask().execute();
 //        new AddToDropboxTask().execute(fileName.concat(".mp4"));
     }
 
@@ -142,21 +119,21 @@ public class Home extends Activity {
     private void setUpIOStreams() throws IOException
     {
 //        Log.e(LOG_TAG, "asdlfkj0");
-        InetAddress addr = InetAddress.getByName("10.24.142.176");
+//        InetAddress addr = InetAddress.getByName("10.24.142.176");
                 //ipBox.getText().toString());
 
-//        Log.e(LOG_TAG, "asdlfkj1");
+        Log.e(LOG_TAG, "asdlfkj1");
 
         try {
             //client = new Socket(addr, 8887);
-//            client = new Socket("10.24.142.176", 5252);
-            client = new Socket("unix3.andrew.cmu.edu", 8888);
+            client = new Socket("10.24.142.176", 8888);
+//            client = new Socket("unix2.andrew.cmu.edu", 8888);
 //            client = new Socket("localhost", 8887);
         } catch (Throwable e) {
-//            Log.e(LOG_TAG, "98q3y4qxw8rybq98xy3r98yq384bcto");
+            Log.e(LOG_TAG, "98q3y4qxw8rybq98xy3r98yq384bcto");
             Log.e(LOG_TAG, e.getMessage());
         }
-//        Log.e(LOG_TAG, "asdlfkj2");
+        Log.e(LOG_TAG, "asdlfkj2");
 
         outToServer = new DataOutputStream(client.getOutputStream());
 //        Log.e(LOG_TAG, "asdlfkj3");
@@ -168,14 +145,14 @@ public class Home extends Activity {
         String pic = appDirectoryPath + "/pic.png";
         File f = new File(pic);
         FileOutputStream outToFile = new FileOutputStream(f);
-        
+
         byte[] buffer = new byte[1231];
-        while(inFromServer.read(buffer)) >= 0) { 
+        while(inFromServer.read(buffer)) >= 0) {
         	outToFile.write(buffer);
         }
-        
-        
-        
+
+
+
     }
 
     private void enableConnection()
@@ -290,6 +267,4 @@ public class Home extends Activity {
             return null;
         }
     }
-    
-    
 }

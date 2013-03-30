@@ -81,7 +81,7 @@ class SimpleConverter(GenericConverter):
 
       # Unimplemented feature
       # return MusicalNote.notenames + str(musical_note.length)
-#       return MusicalNote.notenames + "'" * octave + str(4)
+      # return MusicalNote.notenames + "'" * octave + str(4)
       if octave >= 4:
         octave_string = (octave - 4) * "'"
       else:
@@ -128,7 +128,6 @@ class SimpleConverter(GenericConverter):
         mul = SimpleConverter.MusicalNote.get_mul(eighth_note, duration)
         types += [int(round(8 / mul))]
       return (types, eighth_note)
-
 
   def __init__(self, win_s, hop_s):
     super(SimpleConverter, self).__init__(win_s, hop_s)
@@ -181,11 +180,20 @@ class SimpleConverter(GenericConverter):
           break
 
       # don't want to add otherwise because higher chance at transition zone
-#       elif 0 != pitch:
       if abs(pitch) > 0.1:
         previous_samples += [pitch]
 
       total_frames += read
+
+    # BUG: will crash if list is empty
+    current = notes[0]
+    newnotes = []
+    for i in xrange(1,len(notes)):
+      if current[0] != notes[i][0] or current[1] != notes[i][1]:
+        newnotes += [notes[i]]
+        current = notes[i]
+
+    notes = newnotes
 
     print notes
     durations = \
@@ -212,6 +220,7 @@ class SimpleConverter(GenericConverter):
 \\begin{document}
 \\begin{lilypond}
 {
+\clef bass
 """ + " ".join(notes_notation) + \
 """
 }

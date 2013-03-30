@@ -19,4 +19,3 @@ subprocess.call("lilypond-book --output=out --pdf in/%s.lytex" % filename,
                 shell = True)
 subprocess.call("cd out; pdflatex %s" % filename, shell = True)
 subprocess.call("convert out/%s.pdf out/%s.png" % (filename, filename), shell = True)
-
