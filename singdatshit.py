@@ -73,13 +73,17 @@ class SimpleConverter(GenericConverter):
 
   def _parse_(self, filename, samplerate):
     from aubio import source, pitch, tempo
+    # MAGIC NUMBERS ALERT
+    tempo_win_s = self.win_s/2
+    tempo_hop_s = self.hop_s/4
     s = source(filename, samplerate, self.hop_s)
 
     pitch_o = pitch("default", self.win_s, self.hop_s, samplerate)
     pitch_o.set_unit("midi")
 
-    tempo_o = tempo("default", self.win_s, self.hop_s, samplerate)
-    delay = 4. * self.hop_s
+    s2 = source(filename, samplerate, tempo_hop_s)
+    tempo_o = tempo("default", tempo_win_s, tempo_hop_s, samplerate)
+    delay = 4. * tempo_hop_s
 
     notes = []
 
@@ -94,20 +98,26 @@ class SimpleConverter(GenericConverter):
       samples, read = s()
       pitch = pitch_o(samples)[0]
 
-      print pitch
-      is_beat = tempo_o(samples)
+      for iter in xrange(self.hop_s/tempo_hop_s):
+        samples2, read2 = s2()
 
-      # BUG: doesn't work if sample starts on beat FIRST
-      if is_beat:
-        this_beat = int(total_frames - delay + is_beat[0] * self.hop_s)
-        average = sum(previous_samples)/len(previous_samples)
-        note, octave = SimpleConverter.MusicalNote.coord_to_note(average)
-        notes += [(note, octave, total_frames/samplerate)]
-        previous_samples = []
+        if read < tempo_hop_s:
+          break
+
+        is_beat = tempo_o(samples2)
+
+        # BUG: doesn't work if sample starts on beat FIRST
+        if is_beat:
+          this_beat = int(total_frames - delay + is_beat[0] * tempo_hop_s)
+          average = sum(previous_samples)/len(previous_samples)
+          note, octave = SimpleConverter.MusicalNote.coord_to_note(average)
+          notes += [(note, octave, total_frames/samplerate)]
+          previous_samples = []
+          break
 
       # don't want to add otherwise because higher chance at transition zone
-#       elif 0 != pitch:
-      elif abs(pitch) > 0.1:
+      # also don't want to add noises
+      if abs(pitch) > 10:
         previous_samples += [pitch]
 
       total_frames += read
