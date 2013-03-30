@@ -1,7 +1,3 @@
-import sys
-from math import log
-from aubio import source, pitch
-
 class GenericConverter(object):
 
   def __init__(self, win_s, hop_s):
@@ -26,7 +22,6 @@ class GenericConverter(object):
 
 class SimpleConverter(GenericConverter):
 
-  #duration = { 1 :
   notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
   _A4_ = 440 # Hz
   _A4Coord_ = 57
@@ -36,6 +31,17 @@ class SimpleConverter(GenericConverter):
     def __init__(self, note, length):
       self.note = note
       self.length = length
+
+    def __repr__(self):
+      return "MusicalNote(%r, %r)" % (self.note, self.length)
+
+    @classmethod
+    def coord_to_note(cls, coord):
+      steps_in_octave = SimpleConverter.steps_in_octave
+      coord = int(round(coord))
+      (index, octave) = (coord % steps_in_octave,
+                         coord / steps_in_octave)
+      return SimpleConverter.notes[index], octave
 
     @classmethod
     def hertz_to_note(cls, hertz):
@@ -51,18 +57,22 @@ class SimpleConverter(GenericConverter):
               is the octave the musical note is in, as per scientific
               musical notation
       """
+      from math import log
+      if 0.0 == hertz:
+        return (None, None)
       steps_in_octave = SimpleConverter.steps_in_octave
       hertz = float(hertz)
-      steps_away = int(round(steps_in_octave * log(hertz/SimpleConverter._A4_)))
+      steps_away = int(round(steps_in_octave * log(hertz/SimpleConverter._A4_, 2)))
       new_position = SimpleConverter._A4Coord_ + steps_away
-      (index, octave) = (int(round(new_position % steps_in_octave)),
-                         int(new_position / steps_in_octave))
+      (index, octave) = (new_position % steps_in_octave,
+                         new_position / steps_in_octave)
       return SimpleConverter.notes[index], octave
 
   def __init__(self, win_s, hop_s):
-    super(MyConvertDatShit, self).__init__(win_s, hop_s)
+    super(SimpleConverter, self).__init__(win_s, hop_s)
 
   def _parse_(self, filename, samplerate):
+    from aubio import source, pitch, tempo
     s = source(filename, samplerate, self.hop_s)
 
     pitch_o = pitch("default", self.win_s, self.hop_s, samplerate)
@@ -79,12 +89,33 @@ class SimpleConverter(GenericConverter):
     samplerate = float(samplerate)
     previous_samples = []
 
-    while read < hop_s:
+    read = self.hop_s
+    while read >= self.hop_s:
       samples, read = s()
       pitch = pitch_o(samples)[0]
-      note, octave = MusicalNote.hertz_to_note(pitch)
 
-      notes += [SimpleConverter.MusicalNote(note + str(octave), fixed_interval)]
+      print pitch
+      is_beat = tempo_o(samples)
+
+      # BUG: doesn't work if sample starts on beat FIRST
+      if is_beat:
+        this_beat = int(total_frames - delay + is_beat[0] * self.hop_s)
+        average = sum(previous_samples)/len(previous_samples)
+        note, octave = SimpleConverter.MusicalNote.coord_to_note(average)
+        notes += [(note, octave, total_frames/samplerate)]
+        previous_samples = []
+
+      # don't want to add otherwise because higher chance at transition zone
+#       elif 0 != pitch:
+      elif abs(pitch) > 0.1:
+        previous_samples += [pitch]
+
+      total_frames += read
+
+    for i in xrange(len(notes) - 1, 0, -1):
+      (pnote, poctave, pstart) = notes[i - 1]
+      (note, octave, start) = notes[i]
+      notes[i] = (note, octave, start - pstart)
 
     notes = [SimpleConverter.MusicalNote(note[0] + str(note[1]), note[2]) \
              for note in notes]

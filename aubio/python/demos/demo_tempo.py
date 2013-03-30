@@ -37,4 +37,7 @@ while True:
         beats.append(this_beat)
     total_frames += read
     if read < hop_s: break
-#print len(beats)
+print beats, samplerate
+a = map(lambda u : 1.0 * u / samplerate, map(lambda v : v - beats[0], beats))
+print a, len(a)
+# print len(beats)

@@ -1,6 +1,7 @@
 *.pyc
 *.~[0-9]~
 *.swp
+*[#~]
 
 # android shit
 *.class
