@@ -43,3 +43,9 @@ aubio/python/dist
 aubio/python/MANIFEST
 aubio/python/*.db
 aubio/python/*.wav
+
+# latex generated file
+*.bbl
+*.aux
+*.log
+*.toc

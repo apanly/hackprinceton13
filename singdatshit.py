@@ -23,6 +23,8 @@ class GenericConverter(object):
 class SimpleConverter(GenericConverter):
 
   notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+  notenames = ["c", "cis", "d", "dis", "e", "f", "fis", "g", "gis", "a", "ais", "b"]
+
   _A4_ = 440 # Hz
   _A4Coord_ = 57
   steps_in_octave = 12
@@ -67,6 +69,19 @@ class SimpleConverter(GenericConverter):
       (index, octave) = (new_position % steps_in_octave,
                          new_position / steps_in_octave)
       return SimpleConverter.notes[index], octave
+  
+    @classmethod
+    def note_to_hilbert(cls, musical_note):
+      if note == None: return None
+      assert(type(note) == MusicalNote)
+
+      octave = int(musical_note.note[-1])
+      note = musical_note.note[:-1]
+      index = list.index(MusicalNote.notes, note)
+
+      # Unimplemented feature
+      # return MusicalNote.notenames + str(musical_note.length)
+      return MusicalNote.notenames + "'" * octave + str(4)
 
   def __init__(self, win_s, hop_s):
     super(SimpleConverter, self).__init__(win_s, hop_s)
@@ -134,3 +149,24 @@ class SimpleConverter(GenericConverter):
              for note in notes]
 
     return notes
+
+  @classmethod
+  def to_pdf(cls, notes):
+    """
+    warning: does not check whether everything is a MusicalNote
+    """
+    notes_notation = [MusicalNote.note_to_hilbert(note) for note in notes]
+    doc = \
+"""
+\documentclass{article}
+\begin{document}
+\begin{lilypond} 
+{
+""" + " ".join(notes_notation) + \
+"""
+}
+\end{lilypond}
+\end{document}
+"""
+
+    return doc
