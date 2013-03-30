@@ -98,12 +98,15 @@ class SimpleConverter(GenericConverter):
       samples, read = s()
       pitch = pitch_o(samples)[0]
 
+      # go through the finer steps for beat detection
       for iter in xrange(self.hop_s/tempo_hop_s):
         samples2, read2 = s2()
 
+        # if no more stuff to read
         if read < tempo_hop_s:
           break
 
+        # hopefully this work
         is_beat = tempo_o(samples2)
 
         # BUG: doesn't work if sample starts on beat FIRST
