@@ -5,6 +5,7 @@
 # android shit
 *.class
 *.apk
+out
 
 # gcov generated files
 *.gcno
