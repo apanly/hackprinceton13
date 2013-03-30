@@ -8,6 +8,8 @@
 # android shit
 *.class
 *.apk
+
+in
 out
 
 # gcov generated files

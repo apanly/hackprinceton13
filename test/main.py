@@ -5,8 +5,9 @@ from singdatshit import *
 input_dir = "input"
 
 def run_all_tests():
-  test_hertz_to_note()
-  test_parser_piano_wav()
+#   test_hertz_to_note()
+#   test_parser_piano_wav()
+  test_to_pdf()
 
 def test_hertz_to_note():
   hertz_to_note = SimpleConverter.MusicalNote.hertz_to_note
@@ -25,10 +26,13 @@ def test_hertz_to_note():
 def test_parser_piano_wav():
   converter = SimpleConverter(1024, 1024)
 #   print converter.parse("%s/810orig24to36.wav" % input_dir)
-  files = ["A220-oboe.wav", "A440-oboe.wav", "A880-oboe.wav",
-           "A1760-oboe.wav", "Canon-violin.wav", "Canon-violin-rerecord.wav",
-           "Canon-violin-rerecord-bgnoise.wav", "mark-test1.wav",
-           "mark-newworld.wav"]
+  files = [
+    # "A220-oboe.wav", "A440-oboe.wav", "A880-oboe.wav",
+#     "A1760-oboe.wav", "Canon-violin.wav", "Canon-violin-rerecord.wav",
+#     "Canon-violin-rerecord-bgnoise.wav", "mark-test1.wav",
+#     "mark-newworld.wav",
+    "mark-bringhimhome.wav"
+    ]
   for file in files:
     print file
     for n in converter.parse("%s/%s" % (input_dir, file)):
@@ -38,16 +42,16 @@ def test_parser_piano_wav():
 
 def test_to_pdf():
   converter = SimpleConverter(1024, 1024)
-  parser_output = converter.parse("%s/Canon-violin.wav" % (input_dir))
+  filename = "mark-bringhimhome"
+  parser_output = converter.parse("%s/%s.wav" % (input_dir, filename))
   text = SimpleConverter.to_pdf(parser_output)
-  f = open("Canon-violin.lytex", "w")
+  f = open("in/%s.lytex" % filename, "w")
   f.write(text)
   f.close()
   import subprocess
-  subprocess.call("lilypond-book --output=out --pdf Canon-violin.lytex",
+  subprocess.call("lilypond-book --output=out --pdf in/%s.lytex" % filename,
                   shell = True)
-  subprocess.call("cd out", shell = True)
-  subprocess.call("pdflatex Canon-violin", shell = True)
+  subprocess.call("cd out; pdflatex %s" % filename, shell = True)
 
 def main():
   run_all_tests()

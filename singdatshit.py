@@ -72,17 +72,22 @@ class SimpleConverter(GenericConverter):
 
     @classmethod
     def note_to_hilbert(cls, musical_note):
-      if note == None: return None
-      assert(type(note) == MusicalNote)
+      if musical_note == None: return None
+      assert(type(musical_note) == SimpleConverter.MusicalNote)
 
       octave = int(musical_note.note[-1])
       note = musical_note.note[:-1]
-      index = list.index(MusicalNote.notes, note)
+      index = list.index(SimpleConverter.notes, note)
 
       # Unimplemented feature
       # return MusicalNote.notenames + str(musical_note.length)
 #       return MusicalNote.notenames + "'" * octave + str(4)
-      return MusicalNote.notenames + "'" * octave + str(musical_note.length)
+      if octave >= 4:
+        octave_string = (octave - 4) * "'"
+      else:
+        octave_string = (4 - octave) * ","
+      return SimpleConverter.notenames[index] + octave_string + \
+          str(musical_note.length)
 
     @classmethod
     def get_durations(cls, notes, endtime):
@@ -182,6 +187,7 @@ class SimpleConverter(GenericConverter):
 
       total_frames += read
 
+    print notes
     durations = \
         SimpleConverter.MusicalNote.get_durations(notes,
                                                   total_frames / samplerate)
@@ -198,12 +204,13 @@ class SimpleConverter(GenericConverter):
     """
     warning: does not check whether everything is a MusicalNote
     """
-    notes_notation = [MusicalNote.note_to_hilbert(note) for note in notes]
+    notes_notation = [SimpleConverter.MusicalNote.note_to_hilbert(note)
+                      for note in notes]
     doc = \
 """
 \documentclass{article}
-\begin{document}
-\begin{lilypond}
+\\begin{document}
+\\begin{lilypond}
 {
 """ + " ".join(notes_notation) + \
 """
