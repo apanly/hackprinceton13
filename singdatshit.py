@@ -68,6 +68,47 @@ class SimpleConverter(GenericConverter):
                          new_position / steps_in_octave)
       return SimpleConverter.notes[index], octave
 
+    @classmethod
+    def get_durations(cls, notes, endtime):
+      durations = []
+      for i in xrange(0, len(notes) - 1):
+        (note, octave, start) = notes[i]
+        (snote, soctave, sstart) = notes[i + 1]
+        durations += [sstart - start]
+      (note, octave, start) = notes[-1]
+      durations += [endtime - start]
+      return durations
+
+    @classmethod
+    def clamp(cls, x, lo, hi):
+      return min(max(x, lo), hi)
+
+    @classmethod
+    def get_mul(cls, eighth_note, duration):
+      from math import log
+      mul = SimpleConverter.MusicalNote.clamp(2 ** round(log(duration,
+                                                             eighth_note)),
+                                              1, 8)
+      return mul
+
+    @classmethod
+    def get_types(cls, durations):
+      sorted_durations = sorted(durations)
+      mean_errors = []
+      for eighth_note in sorted_durations:
+        errors = []
+        for duration in sorted_durations:
+          mul = SimpleConverter.MusicalNote.get_mul(eighth_note, duration)
+          errors += [abs(duration - eighth_note * mul)]
+        mean_errors += [sum(errors) / len(errors)]
+      eighth_note = sorted_durations[mean_errors.index(min(mean_errors))]
+      types = []
+      for duration in sorted_durations:
+        mul = SimpleConverter.MusicalNote.get_mul(eighth_note, duration)
+        types += [int(round(8 / mul))]
+      return (types, eighth_note)
+
+
   def __init__(self, win_s, hop_s):
     super(SimpleConverter, self).__init__(win_s, hop_s)
 
@@ -78,8 +119,12 @@ class SimpleConverter(GenericConverter):
     pitch_o = pitch("default", self.win_s, self.hop_s, samplerate)
     pitch_o.set_unit("midi")
 
-    tempo_o = tempo("default", self.win_s, self.hop_s, samplerate)
-    delay = 4. * self.hop_s
+    tempo_win_s = self.win_s / 2
+    tempo_hop_s = self.hop_s / 2
+    s2 = source(filename, samplerate, tempo_hop_s)
+
+    tempo_o = tempo("default", tempo_win_s, tempo_hop_s, samplerate)
+    delay = 4. * tempo_hop_s
 
     notes = []
 
@@ -116,19 +161,18 @@ class SimpleConverter(GenericConverter):
 
       # don't want to add otherwise because higher chance at transition zone
 #       elif 0 != pitch:
-      elif abs(pitch) > 0.1:
+      if abs(pitch) > 0.1:
         previous_samples += [pitch]
 
       total_frames += read
 
-    for i in xrange(0, len(notes) - 1):
-      (note, octave, start) = notes[i]
-      (snote, soctave, sstart) = notes[i + 1]
-      notes[i] = (note, octave, sstart - start)
-    (note, octave, start) = notes[-1]
-    notes[-1] = (note, octave, total_frames/samplerate - start)
+    durations = \
+        SimpleConverter.MusicalNote.get_durations(notes,
+                                                  total_frames / samplerate)
+    (types, eighth_note) = SimpleConverter.MusicalNote.get_types(durations)
 
-    notes = [SimpleConverter.MusicalNote(note[0] + str(note[1]), note[2]) \
-             for note in notes]
+    notes = [SimpleConverter.MusicalNote(notes[i][0] + str(notes[i][1]),
+                                         notes[i][2]) \
+             for i in xrange(len(notes))]
 
     return notes
