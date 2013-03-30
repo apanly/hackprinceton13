@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -25,19 +26,28 @@ public class Home extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appDirectoryPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/recordat/";
+        appDirectoryPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/singdatshit/";
+        new File(appDirectoryPath).mkdirs();
         LinearLayout layout = new LinearLayout(this);
         recordButton = new Button(this);
+        recordButton.setText("RECORD THAT SHIT!");
+        recordButton.setOnClickListener(new View.OnClickListener() {
+            private boolean startBool = true;
+            @Override
+            public void onClick(View view) {
+                if (startBool) {
+                    startRecording();
+                    recordButton.setText("STOP RECORDING THAT SHIT!");
+                    startBool = false;
+                } else {
+                    stopRecording();
+                    recordButton.setText("RECORD THAT SHIT!");
+                    startBool = true;
+                }
+            }
+        });
         layout.addView(recordButton);
         setContentView(layout);
-    }
-
-    private void onRecord(boolean start) {
-        if (start) {
-            startRecording();
-        } else {
-            stopRecording();
-        }
     }
 
     private void startRecording() {
@@ -45,8 +55,8 @@ public class Home extends Activity {
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         recorder.setOutputFile(appDirectoryPath + fileName + ".wav");
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
         try {
             recorder.prepare();

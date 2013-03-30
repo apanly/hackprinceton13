@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="ERROR" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="1c80775c-576f-4e6a-860a-2d8bbcf02194" name="Default" comment="" />
     <ignored path="android.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="$PROJECT_DIR$/res/values/strings.xml" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364622560196" ignored="false" />
     <file path="$PROJECT_DIR$/res/layout/main.xml" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364622561156" ignored="false" />
-    <file path="$PROJECT_DIR$/.idea/workspace.xml" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364628454740" ignored="false" />
+    <file path="$PROJECT_DIR$/.idea/workspace.xml" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364631421322" ignored="false" />
     <file path="$PROJECT_DIR$/.idea/compiler.xml" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364628454740" ignored="false" />
     <file path="$PROJECT_DIR$/.idea/misc.xml" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364628454740" ignored="false" />
-    <file path="/Home.java" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364628222268" ignored="false" />
-    <file path="$PROJECT_DIR$/gen/com/example/android/BuildConfig.java" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364628457166" ignored="false" />
+    <file path="/Home.java" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364631430657" ignored="false" />
+    <file path="$PROJECT_DIR$/gen/com/example/android/BuildConfig.java" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364629299525" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/plugins/android/lib/android.jar!/org/jetbrains/android/android.xsd" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364629272645" ignored="false" />
+    <file path="/fragment.java" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364629809095" ignored="false" />
+    <file path="/Dummy.txt" changelist="1c80775c-576f-4e6a-860a-2d8bbcf02194" time="1364631155706" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +78,16 @@
       <file leaf-file-name="Home.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/example/android/Home.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="22" selection-start="985" selection-end="985" vertical-scroll-proportion="0.53295934">
+            <state line="39" column="0" selection-start="1298" selection-end="1298" vertical-scroll-proportion="0.572043">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="0" selection-start="497" selection-end="497" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -88,6 +103,7 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
+        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/src/com/example/android/Home.java" />
       </list>
     </option>
@@ -332,17 +348,17 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32891247" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.6710875" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32804233" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275862" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -414,9 +430,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="0" selection-start="497" selection-end="497" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/example/android/Home.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="22" selection-start="985" selection-end="985" vertical-scroll-proportion="0.53295934">
+        <state line="39" column="0" selection-start="1298" selection-end="1298" vertical-scroll-proportion="0.572043">
           <folding />
         </state>
       </provider>
