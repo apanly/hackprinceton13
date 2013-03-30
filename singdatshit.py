@@ -69,7 +69,7 @@ class SimpleConverter(GenericConverter):
       (index, octave) = (new_position % steps_in_octave,
                          new_position / steps_in_octave)
       return SimpleConverter.notes[index], octave
-  
+
     @classmethod
     def note_to_hilbert(cls, musical_note):
       if note == None: return None
@@ -81,7 +81,8 @@ class SimpleConverter(GenericConverter):
 
       # Unimplemented feature
       # return MusicalNote.notenames + str(musical_note.length)
-      return MusicalNote.notenames + "'" * octave + str(4)
+#       return MusicalNote.notenames + "'" * octave + str(4)
+      return MusicalNote.notenames + "'" * octave + str(musical_note.length)
 
     @classmethod
     def get_durations(cls, notes, endtime):
@@ -187,7 +188,7 @@ class SimpleConverter(GenericConverter):
     (types, eighth_note) = SimpleConverter.MusicalNote.get_types(durations)
 
     notes = [SimpleConverter.MusicalNote(notes[i][0] + str(notes[i][1]),
-                                         notes[i][2]) \
+                                         types[i]) \
              for i in xrange(len(notes))]
 
     return notes
@@ -202,7 +203,7 @@ class SimpleConverter(GenericConverter):
 """
 \documentclass{article}
 \begin{document}
-\begin{lilypond} 
+\begin{lilypond}
 {
 """ + " ".join(notes_notation) + \
 """

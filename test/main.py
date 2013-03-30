@@ -36,6 +36,19 @@ def test_parser_piano_wav():
 #   for n in converter.parse("%s/A880.wav" % input_dir):
 #     print n.note if n != None else None
 
+def test_to_pdf():
+  converter = SimpleConverter(1024, 1024)
+  parser_output = converter.parse("%s/Canon-violin.wav" % (input_dir))
+  text = SimpleConverter.to_pdf(parser_output)
+  f = open("Canon-violin.lytex", "w")
+  f.write(text)
+  f.close()
+  import subprocess
+  subprocess.call("lilypond-book --output=out --pdf Canon-violin.lytex",
+                  shell = True)
+  subprocess.call("cd out", shell = True)
+  subprocess.call("pdflatex Canon-violin", shell = True)
+
 def main():
   run_all_tests()
 
