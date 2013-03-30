@@ -1,35 +1,37 @@
-*.py[cod]
+*.pyc
+*.~[0-9]~
+*.swp
 
-# C extensions
-*.so
+# gcov generated files
+*.gcno
+*.gcda
 
-# Packages
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
-lib
-lib64
+# ignore compiled examples
+RE:aubio/examples/[a-z]*
 
-# Installer logs
-pip-log.txt
+# ignore compiled test programs
+RE:aubio/tests/src/test-[a-z-_]*$
+RE:aubio/tests/cpp/test-[a-z-_]*$
 
-# Unit test / coverage reports
-.coverage
-.tox
-nosetests.xml
+# only sgml manpages count
+aubio/doc/*.1
 
-# Translations
-*.mo
+# cachegrind/callgrind stuff
+**/cachegrind.out.[0-9]*
+**/callgrind.out.[0-9]*
 
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
+# waf stuff
+aubio/.lock-waf*
+aubio/.waf-*
+aubio/build/
+
+# doxygen
+aubio/doc/devel/
+aubio/doc/user/
+aubio/doc/examples/
+
+aubio/python/gen
+aubio/python/dist
+aubio/python/MANIFEST
+aubio/python/*.db
+aubio/python/*.wav
