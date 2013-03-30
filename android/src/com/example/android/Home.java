@@ -65,12 +65,12 @@ public class Home extends Activity {
             @Override
             public void onClick(View view) {
                 new SendMessageAsyncTask().execute();
-//                Log.e(LOG_TAG, "fuckfuckfuck");
+                Log.e(LOG_TAG, "fuckfuckfuck");
             }
         });
         layout.addView(textView);
         layout.addView(recordButton);
-        layout.addView(sendshitButton);
+//        layout.addView(sendshitButton);
         setContentView(layout);
 //        enableConnection();
     }
@@ -98,6 +98,7 @@ public class Home extends Activity {
         recorder.stop();
         recorder.release();
         recorder = null;
+        new SendMessageAsyncTask().execute();
 //        new AddToDropboxTask().execute(fileName.concat(".mp4"));
     }
 
@@ -114,21 +115,21 @@ public class Home extends Activity {
     private void setUpIOStreams() throws IOException
     {
 //        Log.e(LOG_TAG, "asdlfkj0");
-        InetAddress addr = InetAddress.getByName("10.24.142.176");
+//        InetAddress addr = InetAddress.getByName("10.24.142.176");
                 //ipBox.getText().toString());
 
-//        Log.e(LOG_TAG, "asdlfkj1");
+        Log.e(LOG_TAG, "asdlfkj1");
 
         try {
             //client = new Socket(addr, 8887);
-//            client = new Socket("10.24.142.176", 5252);
-            client = new Socket("unix3.andrew.cmu.edu", 8888);
+            client = new Socket("10.24.142.176", 8888);
+//            client = new Socket("unix2.andrew.cmu.edu", 8888);
 //            client = new Socket("localhost", 8887);
         } catch (Throwable e) {
-//            Log.e(LOG_TAG, "98q3y4qxw8rybq98xy3r98yq384bcto");
+            Log.e(LOG_TAG, "98q3y4qxw8rybq98xy3r98yq384bcto");
             Log.e(LOG_TAG, e.getMessage());
         }
-//        Log.e(LOG_TAG, "asdlfkj2");
+        Log.e(LOG_TAG, "asdlfkj2");
 
         outToServer = new DataOutputStream(client.getOutputStream());
 //        Log.e(LOG_TAG, "asdlfkj3");
