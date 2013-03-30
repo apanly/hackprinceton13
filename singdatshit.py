@@ -186,13 +186,13 @@ class SimpleConverter(GenericConverter):
       total_frames += read
 
     # BUG: will crash if list is empty
-    current = note[0]
+    current = notes[0]
     newnotes = []
     for i in xrange(1,len(notes)):
-      if current.notes != note[i].notes:
-        newnotes += [note[i]]
-        current = note[i]
-    
+      if current[0] != notes[i][0] or current[1] != notes[i][1]:
+        newnotes += [notes[i]]
+        current = notes[i]
+
     notes = newnotes
 
     print notes
