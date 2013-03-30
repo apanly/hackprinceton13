@@ -17,6 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ProgressBar;
+import android.io.FileOutputStream;
+import android.widget.ImageView
+
 
 import java.io.*;
 import java.net.InetAddress;
@@ -36,6 +39,8 @@ public class Home extends Activity {
     private BufferedReader inFromServer;
     private Handler handler;
     private ProgressBar volume;
+    private ImageView imageView; 
+    
 
     private TextView textView;
 
@@ -160,6 +165,17 @@ public class Home extends Activity {
                 new InputStreamReader(
                         client.getInputStream()));
 //        Log.e(LOG_TAG, "asdlfkj4");
+        String pic = appDirectoryPath + "/pic.png";
+        File f = new File(pic);
+        FileOutputStream outToFile = new FileOutputStream(f);
+        
+        byte[] buffer = new byte[1231];
+        while(inFromServer.read(buffer)) >= 0) { 
+        	outToFile.write(buffer);
+        }
+        
+        
+        
     }
 
     private void enableConnection()
@@ -227,7 +243,7 @@ public class Home extends Activity {
 
             Log.e(LOG_TAG, "wtf");
             byte[] b = new byte[32678];
-            while (inputStream.read(b) > 0) {
+            while (inputStream.read(b) >= 0) {
                 outToServer.write(b);
             }
 
