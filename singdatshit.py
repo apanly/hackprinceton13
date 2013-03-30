@@ -1,4 +1,5 @@
 import sys
+from math import log
 from aubio import source, pitch
 
 class GenericConverter(object):
@@ -17,7 +18,7 @@ class GenericConverter(object):
     """
     converts the filename to a representation of the music
     stored in filename
-    
+
     @param filename the filename of the .wav file
     @param samplerate the sampling rate, in seconds
     """
@@ -51,17 +52,18 @@ class SimpleConverter(GenericConverter):
       """
       steps_in_octave = SimpleConverter.steps_in_octave
       hertz = float(hertz)
-      steps_away = steps_in_octave * log(hertz/SimpleConverter._A4_)
+      steps_away = steps_in_octave * log(hertz/SimpleConverter._A4_, 2)
       new_position = SimpleConverter._A4Coord_ + steps_away
-      (index, octave) = new_position % steps_in_octave, new_position / steps_in_octave
+      (index, octave) = (int(round(new_position % steps_in_octave)),
+                         int(new_position / steps_in_octave))
       return SimpleConverter.notes[index], octave
-  
+
   def __init__(self, win_s, hop_s):
     super(MyConvertDatShit, self).__init__(win_s, hop_s)
 
   def _parse_(self, filename, samplerate):
     s = source(filename, samplerate, self.hop_s)
-    
+
     pitch_o = pitch("default", win_s, hop_s, samplerate)
     pitch_o.set_unit("midi")
 
@@ -75,7 +77,7 @@ class SimpleConverter(GenericConverter):
       samples, read = s()
       pitch = pitch_o(samples)[0]
       note, octave = MusicalNote.hertz_to_note(pitch)
-      
+
       notes += [SimpleConverter.MusicalNote(note + str(octave), fixed_interval)]
 
       if read < hop_s:
